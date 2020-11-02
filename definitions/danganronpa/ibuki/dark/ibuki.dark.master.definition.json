@@ -55,8 +55,8 @@
     "diff.deleted": "#262626",
     "diff.inserted": "#142F14"
   },
-  "editorScheme":{
-    "colors" : {
+  "editorScheme": {
+    "colors": {
       "accentColor": "#ff69df",
       "startColor": "#68c4ee",
       "nonProjectFileScopeColor": "#343635",
