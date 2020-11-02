@@ -53,5 +53,13 @@
     "keyColor": "#68f3e7",
     "keywordColor": "#988F9A",
     "diff.deleted": "#393F3A"
+  },
+  "editorScheme": {
+    "colors": {
+      "accentColor": "#ff69df",
+      "startColor": "#68eede",
+      "nonProjectFileScopeColor": "#343635",
+      "testScopeColor": "#2f393a"
+    }
   }
 }

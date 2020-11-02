@@ -53,5 +53,11 @@
     "keywordColor": "#ffba2f",
     "keyColor": "#3492b1",
     "diff.deleted": "#33342F"
+  },
+  "editorScheme": {
+    "colors": {
+      "accentColor": "#b6323f",
+      "startColor": "#c79c19"
+    }
   }
 }

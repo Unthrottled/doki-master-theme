@@ -57,5 +57,11 @@
     "diff.inserted": "#142D14",
     "diff.conflict": "#422121",
     "diff.deleted": "#242424"
+  },
+  "editorScheme": {
+    "colors": {
+      "accentColor": "#68a8cb",
+      "startColor": "#68ee75"
+    }
   }
 }

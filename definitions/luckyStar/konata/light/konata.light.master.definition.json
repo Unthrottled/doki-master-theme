@@ -69,5 +69,11 @@
     "diff.conflict": "#c2828a",
     "diff.inserted": "#59A1CD",
     "diff.modified": "#63A2FF"
+  },
+  "editorScheme": {
+    "colors": {
+      "accentColor": "#60ff62",
+      "startColor": "#60ff62"
+    }
   }
 }
