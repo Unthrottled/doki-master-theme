@@ -2,76 +2,74 @@ import {
   MasterDokiThemeDefinition,
   readJson,
   walkDir,
-} from 'doki-build-source';
+} from "doki-build-source";
+import path from "path";
+import fs from "fs";
 
-const path = require('path');
-const fs = require('fs');
-
-const repoDirectory = path.resolve(__dirname, '..');
+const masterThemesDirectory = path.resolve(__dirname, "..");
 
 const jetbrainsTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  "id": dokiThemeDefinition.id,
-  "editorScheme": {
-    "type": "template",
-    "name": dokiThemeDefinition.dark ? "Doki Dark" : "Doki Light"
+  id: dokiThemeDefinition.id,
+  editorScheme: {
+    type: "template",
+    name: dokiThemeDefinition.dark ? "Doki Dark" : "Doki Light",
   },
-  "overrides": {},
-  "ui": {}
+  overrides: {},
+  ui: {},
 });
 
 const vsCodeTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  "id": dokiThemeDefinition.id,
-  "overrides": {},
-  "laf": {},
-  "syntax": {},
-  "colors": {}
+  id: dokiThemeDefinition.id,
+  overrides: {},
+  laf: {},
+  syntax: {},
+  colors: {},
 });
 
 const chromeTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  "id": dokiThemeDefinition.id,
-  "overrides": {},
-  "laf": {},
-  "syntax": {},
-  "colors": {}
+  id: dokiThemeDefinition.id,
+  overrides: {},
+  laf: {},
+  syntax: {},
+  colors: {},
 });
 
 const vimTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  "id": dokiThemeDefinition.id,
-  "overrides": {},
-  "laf": {},
-  "syntax": {},
-  "colors": {}
+  id: dokiThemeDefinition.id,
+  overrides: {},
+  laf: {},
+  syntax: {},
+  colors: {},
 });
 
 const hyperTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  "id": dokiThemeDefinition.id,
-  "backgrounds": {}
+  id: dokiThemeDefinition.id,
+  backgrounds: {},
 });
 
 const githubTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  "id": dokiThemeDefinition.id,
-  "overrides": {},
-  "laf": {},
-  "syntax": {},
-  "colors": {}
+  id: dokiThemeDefinition.id,
+  overrides: {},
+  laf: {},
+  syntax: {},
+  colors: {},
 });
 
 const eclipseTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  "id": dokiThemeDefinition.id,
-  "overrides": {},
-  "laf": {},
-  "syntax": {},
-  "colors": {}
+  id: dokiThemeDefinition.id,
+  overrides: {},
+  laf: {},
+  syntax: {},
+  colors: {},
 });
 
 const jupyterTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  "id": dokiThemeDefinition.id,
-  "overrides": {},
-  "laf": {},
-  "syntax": {},
-  "colors": {}
+  id: dokiThemeDefinition.id,
+  overrides: {},
+  laf: {},
+  syntax: {},
+  colors: {},
 });
-
 
 /*********************************************************************************************/
 
@@ -83,74 +81,95 @@ const jupyterTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
  *
  * @param dokiThemeDefinition
  */
-function buildApplicationTemplate(dokiThemeDefinition: MasterDokiThemeDefinition) {
-  return jetbrainsTemplate(dokiThemeDefinition);
+function buildApplicationTemplate(
+  dokiThemeDefinition: MasterDokiThemeDefinition
+) {
+  return hyperTemplate(dokiThemeDefinition);
 }
 
 /**
  * You also want to change this as well
  *  jetbrains | vsCode | hyper | chrome | vim | github | eclipse | jupyter
  */
-const appName = 'jetbrains';
+const appName = "hyper";
 
 /**************************************************************************/
 
+const masterThemeDefinitionDirectoryPath = path.resolve(
+  masterThemesDirectory,
+  "definitions"
+);
 
-const masterThemeDefinitionDirectoryPath =
-  path.resolve(repoDirectory, 'definitions');
-
-console.log('Preparing to generate theme templates.');
+console.log("Preparing to generate theme templates.");
 
 walkDir(masterThemeDefinitionDirectoryPath)
-  .then(files => files.filter(file => file.endsWith('master.definition.json')))
-  .then(dokiFileDefinitionPaths => {
+  .then((files) =>
+    files.filter((file) => file.endsWith("master.definition.json"))
+  )
+  .then((dokiFileDefinitionPaths) => {
     return {
-      dokiFileDefinitionPaths
+      dokiFileDefinitionPaths,
     };
   })
-  .then(templatesAndDefinitions => {
-    const {
-      dokiFileDefinitionPaths
-    } = templatesAndDefinitions;
-    return dokiFileDefinitionPaths
-      .map(dokiFileDefinitionPath => ({
-        dokiFileDefinitionPath,
-        dokiThemeDefinition: readJson<MasterDokiThemeDefinition>(dokiFileDefinitionPath),
-      }))
-  }).then(dokiThemes => {
-  const themeDirectory = path.resolve(repoDirectory, 'temp', appName);
-  if (fs.existsSync(themeDirectory)) {
-    fs.rmdirSync(themeDirectory, {recursive: true});
+  .then((templatesAndDefinitions) => {
+    const { dokiFileDefinitionPaths } = templatesAndDefinitions;
+    return dokiFileDefinitionPaths.map((dokiFileDefinitionPath) => ({
+      dokiFileDefinitionPath,
+      dokiThemeDefinition: readJson<MasterDokiThemeDefinition>(
+        dokiFileDefinitionPath
+      ),
+    }));
+  })
+  .then((dokiThemes) => {
+    const themeDirectory = path.resolve(
+      masterThemesDirectory,
+      "..",
+      "buildSrc",
+      "assets",
+      "themes"
+    );
+
+    dokiThemes.forEach((dokiTheme) => {
+      const { dokiFileDefinitionPath, dokiThemeDefinition } = dokiTheme;
+
+      const destinationPath = dokiFileDefinitionPath.substr(
+        masterThemeDefinitionDirectoryPath.length
+      );
+      const essentials = buildApplicationTemplate(dokiThemeDefinition);
+
+      const fullFilePath = path.join(themeDirectory, destinationPath);
+
+      fs.mkdirSync(path.resolve(fullFilePath, ".."), {
+        recursive: true,
+      });
+
+      const appTemplateDefinition = fullFilePath.replace(
+        "master.definition",
+        `${appName}.definition`
+      );
+      const previousAppTemplateDefinition = getExistingAppDefinition(
+        appTemplateDefinition
+      );
+
+      const definitionAsString = JSON.stringify(
+        {
+          ...essentials,
+          ...previousAppTemplateDefinition,
+        },
+        null,
+        2
+      );
+      
+      fs.writeFileSync(appTemplateDefinition, definitionAsString);
+    });
+  })
+  .then(() => {
+    console.log("Theme Template Generation Complete!");
+  });
+function getExistingAppDefinition(appTemplateDefinition: string) {
+  if(fs.existsSync(appTemplateDefinition)) {
+    return JSON.parse(fs.readFileSync(appTemplateDefinition, {encoding: 'utf-8'}));
   }
 
-  dokiThemes.forEach(dokiTheme => {
-    const {
-      dokiFileDefinitionPath,
-      dokiThemeDefinition
-    } = dokiTheme;
-
-    const destinationPath = dokiFileDefinitionPath.substr(masterThemeDefinitionDirectoryPath.length);
-    const essentials = buildApplicationTemplate(dokiThemeDefinition);
-
-    const fullFilePath = path.join(themeDirectory, destinationPath);
-
-    fs.mkdirSync(
-      path.resolve(fullFilePath, '..'),
-      {
-        recursive: true
-      }
-    );
-
-    const definitionAsString = JSON.stringify(
-      essentials, null, 2
-    );
-
-    fs.writeFileSync(
-      fullFilePath.replace('master.definition', `${appName}.definition`),
-      definitionAsString
-    );
-  })
-})
-  .then(() => {
-    console.log('Theme Template Generation Complete!');
-  });
+  return {}
+}
